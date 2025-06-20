@@ -1,15 +1,25 @@
+// src/services/api.js
+
 import axios from 'axios';
 
-// Tạo một instance của Axios với cấu hình cơ bản
+// 1. Instance cho các API công khai (public)
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080/api',
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
-// Thêm một interceptor để tự động gắn token vào mỗi request
-apiClient.interceptors.request.use(
+// 2. Instance cho các API cần xác thực (authenticated)
+const authApiClient = axios.create({
+  baseURL: 'http://localhost:8080/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Chỉ thêm interceptor vào instance cần xác thực
+authApiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('user-token');
     if (token) {
@@ -22,4 +32,5 @@ apiClient.interceptors.request.use(
   }
 );
 
-export default apiClient;
+// Export cả hai instance
+export { apiClient, authApiClient };

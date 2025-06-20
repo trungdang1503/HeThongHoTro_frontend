@@ -143,7 +143,7 @@ import PasswordInput from '@/components/PasswordInput.vue';
 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import apiClient from '@/services/api'; // Import apiClient đã cấu hình trong api.js
+import { apiClient } from '@/services/api'; // Import apiClient đã cấu hình trong api.js
 
 // Khai báo các biến lưu trữ giá trị của username, password bằng ref()
 const username = ref('');

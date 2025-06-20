@@ -10,33 +10,21 @@
     </div>
 </template>
 
-<script>
-import apiClient from '@/services/api';
+<script setup>
+import { onMounted, ref } from 'vue';
+// Import instance cần xác thực, CÓ interceptor
+import { authApiClient } from '@/services/api'; 
 
-export default {
-    data() {
-        return {
-            userData: {}
-        };
-    },
-    methods: {
-        async fetchUserData() {
-            try {
-                // Lấy thông tin người dùng hiện tại
-                const response = await apiClient.get('/users/me');
-                this.userData = response.data;
-            } catch (error) {
-                console.error("Không thể lấy dữ liệu người dùng:", error);
-            }
-        },
-        logout() {
-            localStorage.removeItem('user-token');
-            this.$router.push('/login');
-        }
-    },
-    mounted() {
-        // Gọi hàm lấy dữ liệu người dùng khi component được tạo
-        this.fetchUserData();
+const userData = ref(null);
+
+onMounted(async () => {
+    try {
+        // Dùng authApiClient, token sẽ được tự động gắn vào header
+        const response = await authApiClient.get('/user/profile');
+        userData.value = response.data;
+    } catch (error) {
+        console.error("Không thể lấy dữ liệu người dùng:", error);
+        // Có thể xử lý chuyển hướng về trang login nếu token hết hạn (lỗi 401)
     }
-}
+});
 </script>
